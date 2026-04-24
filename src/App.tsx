@@ -2227,7 +2227,18 @@ Responde solo en JSON:
                     <p className="text-xs text-zinc-400">Tus traducciones se guardan localmente en este dispositivo y no se comparten.</p>
                   </div>
 
-                <div className="pt-4">
+                  <div className="pt-4">
+                    {deferredPrompt && (
+                      <button 
+                        onClick={() => {
+                          deferredPrompt?.prompt();
+                        }}
+                        className="w-full py-3 mb-2 bg-emerald-500/10 border border-emerald-500/40 text-emerald-500 rounded-xl text-[10px] font-black uppercase hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                      >
+                        <Download size={12} />
+                        Instalar Aplicación
+                      </button>
+                    )}
                    <button 
                      onClick={() => {
                         if (confirm("¿Seguro? Esto borrará tu historial, favoritos y reiniciará la app para arreglar posibles errores técnicos.")) {
