@@ -1023,6 +1023,9 @@ Responde solo en JSON:
       if (e.message && (e.message.includes("429") || e.message.toLowerCase().includes("quota"))) {
         msg = "¡SERVICIO SATURADO! Google ha pausado las traducciones unos segundos por exceso de uso. Espera 10 segundos y vuelve a intentarlo.";
       }
+      if (e.message && e.message.includes("403")) {
+        msg = "⚠️ API Key bloqueada: Ha sido reportada como filtrada. Debes generar una nueva en Google AI Studio y actualizarla en los ajustes de la app.";
+      }
       
       if (msg.toLowerCase().includes("not found") || msg.toLowerCase().includes("404")) {
         msg = `MODELO NO ENCONTRADO (404): El modelo seleccionado '${selectedModel}' no está disponible para tu clave. Prueba con otro modelo en Ajustes.`;
