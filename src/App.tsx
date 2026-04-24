@@ -2232,29 +2232,34 @@ Responde solo en JSON:
 
                   <div className="pt-4">
                     <button 
-                      onClick={() => {
+                      onClick={async () => {
                         if (deferredPrompt) {
                           deferredPrompt.prompt();
+                          const { outcome } = await deferredPrompt.userChoice;
+                          console.log(`PWA: User response to install prompt: ${outcome}`);
+                          // Clear the prompt after use
+                          window.deferredInstallPrompt = null;
                         } else {
-                          alert("Chrome aún no ha solicitado la instalación. Pulsa los 3 puntos del navegador y busca 'Instalar aplicación' o 'Añadir a pantalla de inicio'. Si no aparece, espera unos segundos y refresca.");
+                          // Explain why we can't force it
+                          alert("Chrome controla cuándo se puede instalar la aplicación. Si el botón no funciona, es porque Chrome no permite forzar la instalación ahora mismo. Por favor, utiliza la opción 'Instalar aplicación' o 'Añadir a pantalla de inicio' del menú del navegador (los 3 puntos).");
                         }
                       }}
                       className={cn(
                         "w-full py-3 mb-2 border rounded-xl text-[10px] font-black uppercase transition-all flex items-center justify-center gap-2",
                         deferredPrompt 
                           ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/20"
-                          : "bg-zinc-800 border-zinc-700 text-zinc-500 hover:bg-zinc-700 hover:text-zinc-300"
+                          : "bg-zinc-800 border-zinc-700 text-zinc-500"
                       )}
                     >
                       <Download size={12} />
-                      {deferredPrompt ? "Instalar Aplicación" : "Instalar (Manual si no disponible)"}
+                      {deferredPrompt ? "INSTALAR APLICACIÓN" : "INSTALAR (USAR MENÚ TRES PUNTOS)"}
                     </button>
                     <div className="text-[10px] text-zinc-600 mb-2">
-                       {deferredPrompt ? "¡Listo para instalar!" : "Esperando Chrome... pulsa arriba si no aparece."}
+                       {deferredPrompt ? "¡Instalación disponible!" : "Si no aparece el botón de instalar, usa el menú '...' del navegador."}
                     </div>
                     {apiDiagnostics.includes("403") && (
                       <div className="p-3 mb-2 bg-red-900/20 border border-red-900/40 text-red-500 rounded-xl text-[10px] font-bold">
-                        ⚠️ Tu API Key parece estar bloqueada. Ve a Ajustes, elimina la API Key y recarga la app.
+                        ⚠️ API KEY BLOQUEADA: Google reportó tu clave como filtrada. Debes generar una nueva en Google AI Studio, eliminar la antigua en Ajustes y pegar la nueva.
                       </div>
                     )}
                    <button 
