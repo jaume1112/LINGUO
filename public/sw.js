@@ -1,4 +1,4 @@
-const CACHE_NAME = 'linguo-tutor-v1';
+const CACHE_NAME = 'linguo-tutor-v2';
 const ASSETS = [
   '/',
   '/index.html',
@@ -13,14 +13,7 @@ self.addEventListener('install', (event) => {
       return cache.addAll(ASSETS);
     })
   );
-});
-
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -29,6 +22,24 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.filter((name) => name !== CACHE_NAME).map((name) => caches.delete(name))
       );
+    })
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (event) => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      caches.match('/index.html').then((response) => {
+        return response || fetch(event.request);
+      })
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
