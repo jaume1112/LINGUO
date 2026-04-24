@@ -1,0 +1,5 @@
+{
+  "name": "Linguo Tutor",
+  "description": "Traductor y tutor personal de idiomas gratuito, optimizado para móviles.",
+  "requestFramePermissions": ["microphone", "camera"]
+}
