@@ -2228,16 +2228,31 @@ Responde solo en JSON:
                   </div>
 
                   <div className="pt-4">
-                    {deferredPrompt && (
-                      <button 
-                        onClick={() => {
-                          deferredPrompt?.prompt();
-                        }}
-                        className="w-full py-3 mb-2 bg-emerald-500/10 border border-emerald-500/40 text-emerald-500 rounded-xl text-[10px] font-black uppercase hover:bg-emerald-500/20 transition-all flex items-center justify-center gap-2"
-                      >
-                        <Download size={12} />
-                        Instalar Aplicación
-                      </button>
+                    <button 
+                      onClick={() => {
+                        if (deferredPrompt) {
+                          deferredPrompt.prompt();
+                        } else {
+                          alert("Chrome aún no ha solicitado la instalación. Pulsa los 3 puntos del navegador y busca 'Instalar aplicación' o 'Añadir a pantalla de inicio'. Si no aparece, espera unos segundos y refresca.");
+                        }
+                      }}
+                      className={cn(
+                        "w-full py-3 mb-2 border rounded-xl text-[10px] font-black uppercase transition-all flex items-center justify-center gap-2",
+                        deferredPrompt 
+                          ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-500 hover:bg-emerald-500/20"
+                          : "bg-zinc-800 border-zinc-700 text-zinc-500 hover:bg-zinc-700 hover:text-zinc-300"
+                      )}
+                    >
+                      <Download size={12} />
+                      {deferredPrompt ? "Instalar Aplicación" : "Instalar (Manual si no disponible)"}
+                    </button>
+                    <div className="text-[10px] text-zinc-600 mb-2">
+                       {deferredPrompt ? "¡Listo para instalar!" : "Esperando Chrome... pulsa arriba si no aparece."}
+                    </div>
+                    {apiDiagnostics.includes("403") && (
+                      <div className="p-3 mb-2 bg-red-900/20 border border-red-900/40 text-red-500 rounded-xl text-[10px] font-bold">
+                        ⚠️ Tu API Key parece estar bloqueada. Ve a Ajustes, elimina la API Key y recarga la app.
+                      </div>
                     )}
                    <button 
                      onClick={() => {
