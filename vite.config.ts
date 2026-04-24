@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'inline',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      includeAssets: ['pwa-192x192.png', 'pwa-512x512.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
         navigateFallback: 'index.html',
@@ -24,6 +24,9 @@ export default defineConfig({
         short_name: 'Linguo',
         description: 'Tu tutor de idiomas offline',
         theme_color: '#09090b',
+        background_color: '#09090b',
+        display: 'standalone',
+        start_url: '/',
         icons: [
           {
             src: 'pwa-192x192.png',
