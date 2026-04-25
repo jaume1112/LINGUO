@@ -379,6 +379,14 @@ export default function App() {
       }
     }
 
+    // Preload voices
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      console.log("Voices loaded:", voices.length);
+    };
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    loadVoices();
+
     // PWA Install detection
     const handleBeforeInstall = (e: any) => {
       console.log('Evento beforeinstallprompt capturado en App');
@@ -730,10 +738,20 @@ export default function App() {
   };
 
   const speakText = (text: string) => {
+    console.log("SpeakText invoked with:", text);
     if (!window.speechSynthesis) {
       setError("TTS not supported.");
       return;
     }
+    
+    // Check if currently speaking/pending
+    console.log("SpeechSynthesis state:", {
+      pending: window.speechSynthesis.pending,
+      speaking: window.speechSynthesis.speaking,
+      paused: window.speechSynthesis.paused,
+      voices: window.speechSynthesis.getVoices().length
+    });
+
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
@@ -748,11 +766,17 @@ export default function App() {
                           voices.find(v => v.lang.startsWith(langCode)) ||
                           voices.find(v => v.lang.startsWith('es'));
     
+    console.log("Matching voice:", matchingVoice?.name);
+    
     if (matchingVoice) {
       utterance.voice = matchingVoice;
       utterance.lang = matchingVoice.lang;
     }
     
+    utterance.onstart = () => console.log("SpeechSynthesis started");
+    utterance.onerror = (e) => console.error("SpeechSynthesis error:", e);
+    utterance.onend = () => console.log("SpeechSynthesis ended");
+
     window.speechSynthesis.speak(utterance);
   };
 
